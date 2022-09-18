@@ -8,8 +8,12 @@ import java.util.List;
 
 public interface ItemStorage {
     Object createItem(Item item, Long id) throws ObjectNotFoundException, IOException;
+
     Item updateItem(Item item, Long id, Long userId);
+
     Item getItem(Long id);
+
     List<Item> getAllItem(Long userId);
+
     List<Item> searchItem(String text, Long userId);
 }
