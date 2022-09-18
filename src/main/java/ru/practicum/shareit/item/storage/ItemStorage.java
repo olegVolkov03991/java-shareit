@@ -11,7 +11,7 @@ public interface ItemStorage {
 
     Item updateItem(Item item, Long id, Long userId);
 
-    Item getItem(long id);
+    Item getItem(Long id);
 
     List<Item> getAllItem(Long userId);
 

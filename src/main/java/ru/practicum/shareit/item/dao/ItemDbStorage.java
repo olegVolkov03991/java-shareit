@@ -63,8 +63,8 @@ public class ItemDbStorage implements ItemStorage {
     }
 
     @Override
-    public Item getItem(long id) {
-        if (!items.containsValue(id)) {
+    public Item getItem(Long id) {
+        if (!items.containsKey(id)) {
             log.error("item does not exist");
         }
         return items.get(id);
