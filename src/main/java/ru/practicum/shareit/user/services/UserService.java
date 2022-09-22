@@ -2,10 +2,13 @@ package ru.practicum.shareit.user.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.BadReqestException;
+import ru.practicum.shareit.exceptions.ObjectAlreadyException;
+import ru.practicum.shareit.user.UserDto;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dao.UserDbStorage;
-import ru.practicum.shareit.user.model.User;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -17,23 +20,50 @@ public class UserService {
         this.userDbStorage = userDbStorage;
     }
 
-    public User createUser(User user) {
-        return userDbStorage.createUser(user);
+    public UserDto createUser(UserDto user) {
+        if (validationEmailForUser(user.getEmail()) && validationEmail(user.getEmail())) {
+            return UserMapper.toUserDto(userDbStorage.createUser(UserMapper.toUser(user)));
+        }
+        throw new ObjectAlreadyException("this email already exists");
     }
 
-    public Collection<User> getAllUsers() {
-        return userDbStorage.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        return UserMapper.toUsersDto(userDbStorage.getAllUsers());
     }
 
-    public User updateUser(Long id, User user) {
-        return userDbStorage.updateUser(id, user);
+    public UserDto updateUser(Long id, UserDto user) {
+        if (user.getEmail() != null) {
+            if (validationEmailForUser(user.getEmail()) && validationEmail(user.getEmail())) {
+                return UserMapper.toUserDto(userDbStorage.updateUser(UserMapper.toUpdateUser(
+                        userDbStorage.getUser(id), UserMapper.toUser(user))));
+            }
+            throw new ObjectAlreadyException("this email already exists");
+        }
+        return UserMapper.toUserDto(userDbStorage.updateUser(UserMapper.toUpdateUser(
+                userDbStorage.getUser(id), UserMapper.toUser(user))));
     }
 
-    public User getUser(Long id) {
-        return userDbStorage.getUser(id);
+    public UserDto getUser(Long id) {
+        return UserMapper.toUserDto(userDbStorage.getUser(id));
     }
 
-    public User deleteuser(Long id) {
-        return userDbStorage.deleteUser(id);
+    public void deleteuser(Long id) {
+        userDbStorage.deleteUser(id);
+    }
+
+    private boolean validationEmailForUser(String email) {
+        for (UserDto userDto : getAllUsers()) {
+            if (userDto.getEmail().equals(email)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validationEmail(String email) {
+        if (email == null || email.isBlank() || !email.contains("@")) {
+            throw new BadReqestException();
+        }
+        return true;
     }
 }

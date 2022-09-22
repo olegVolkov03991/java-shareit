@@ -3,11 +3,13 @@ package ru.practicum.shareit.user.dao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exceptions.ObjectAlreadyException;
+import ru.practicum.shareit.exceptions.ObjectNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -20,25 +22,18 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        User newUser = new User();
         validationUser(user);
-        newUser.setEmail(user.getEmail());
-        newUser.setName(user.getName());
-        newUser.setId(generatedId());
-        users.put(newUser.getId(), newUser);
-        return newUser;
+        user.setId(generatedId());
+        users.put(user.getId(), user);
+        return user;
     }
 
-
     @Override
-    public User updateUser(Long id, User user) {
-        User newUser = new User();
-        if (users.containsKey(id)) {
-            fullUpdate(id, user, newUser);
-            updateUserEmail(id, user, newUser);
-            updateUserName(id, user, newUser);
-        }
-        return newUser;
+    public User updateUser(User user) {
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+        } else throw new ObjectNotFoundException();
+        return user;
     }
 
     @Override
@@ -56,8 +51,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> getAllUsers() {
-        return users.values();
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
     public Long generatedId() {
@@ -73,35 +68,6 @@ public class UserDbStorage implements UserStorage {
                 }
 
             }
-        }
-    }
-
-    public void updateUserName(Long id, User user, User newUser) {
-        if (user.getEmail() == null && user.getName() != null) {
-            newUser.setId(id);
-            newUser.setName(user.getName());
-            newUser.setEmail(users.get(id).getEmail());
-            users.put(id, newUser);
-        }
-    }
-
-    public void updateUserEmail(Long id, User user, User newUser) {
-        if (user.getName() == null && user.getEmail() != null) {
-            validationUser(user);
-            newUser.setId(id);
-            newUser.setName(users.get(id).getName());
-            newUser.setEmail(user.getEmail());
-            users.put(id, newUser);
-        }
-    }
-
-    public void fullUpdate(Long id, User user, User newUser) {
-        if (user.getEmail() != null && user.getName() != null) {
-            validationUser(user);
-            newUser.setId(id);
-            newUser.setName(user.getName());
-            newUser.setEmail(user.getEmail());
-            users.put(id, newUser);
         }
     }
 }

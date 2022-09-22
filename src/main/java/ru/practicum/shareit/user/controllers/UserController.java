@@ -2,16 +2,11 @@ package ru.practicum.shareit.user.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.services.UserService;
 
 import javax.validation.Valid;
-import java.util.Collection;
-
-/**
- * TODO Sprint add-controllers.
- */
-
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -25,27 +20,27 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUsers(@Valid @RequestBody User user) {
+    public UserDto createUsers(@Valid @RequestBody UserDto user) {
         return userService.createUser(user);
     }
 
     @GetMapping
-    public Collection<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PatchMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto user) {
         return userService.updateUser(id, user);
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
 
     @DeleteMapping("/{id}")
-    public User deleteUser(@PathVariable Long id) {
-        return userService.deleteuser(id);
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteuser(id);
     }
 }
