@@ -6,16 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserMapper {
-    public static User toUser(UserDto userDto) {
-        if (userDto == null) {
-            return null;
-        }
-        return User.builder()
-                .id(userDto.getId())
-                .name(userDto.getName())
-                .email(userDto.getEmail())
-                .build();
-    }
 
     public static UserDto toUserDto(User user) {
         if (user == null) {
@@ -26,6 +16,17 @@ public class UserMapper {
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
+    }
+
+    public static User toUser(UserDto userDto) {
+        if (userDto == null) {
+            return null;
+        }
+        User newUser = new User();
+        newUser.setId(userDto.getId());
+        newUser.setName(userDto.getName());
+        newUser.setEmail(userDto.getEmail());
+        return newUser;
     }
 
     public static User toUpdateUser(User user, User updateUser) {

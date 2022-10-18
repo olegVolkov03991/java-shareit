@@ -6,11 +6,10 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
 @Data
 @Builder
 public class ItemDto {
-    private Long id;
+    private Integer id;
     @NotNull
     @NotBlank
     private String name;
@@ -18,6 +17,6 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
-    private Long owner;
-    private String request;
+    private Integer owner;
+    private Integer request;
 }

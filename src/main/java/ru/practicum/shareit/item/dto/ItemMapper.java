@@ -1,23 +1,25 @@
 package ru.practicum.shareit.item.dto;
 
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
 
 public class ItemMapper {
-    public static Item toItem(ItemDto itemDto, Long owner) {
+    public static Item toItem(ItemDto itemDto, Integer userId) {
         if (itemDto == null) {
             return null;
         }
-        return Item.builder()
-                .id(itemDto.getId())
-                .available(itemDto.getAvailable())
-                .description(itemDto.getDescription())
-                .name(itemDto.getName())
-                .owner(owner)
-                .request(itemDto.getRequest())
-                .build();
+        Item item = new Item();
+        item.setId(itemDto.getId());
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
+        item.setOwner(userId);
+        item.setRequest(itemDto.getRequest());
+        return item;
     }
 
     public static ItemDto toItemDto(Item item) {
@@ -35,14 +37,28 @@ public class ItemMapper {
                 .build();
     }
 
-    public static Item updateItem(Item item, Item updateItem) {
-        item.setName(updateItem.getName() == null ? item.getName() : updateItem.getName());
-        item.setDescription(updateItem.getDescription() == null ? item.getDescription() : updateItem.getDescription());
-        item.setAvailable(updateItem.getAvailable() == null ? item.getAvailable() : updateItem.getAvailable());
-        return item;
-    }
-
-    public static List<ItemDto> toItemsDto(List<Item> items) {
-        return items.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+    public static ItemFullDto toItemFullDto(Item item,
+                                            Optional<Booking> lastBooking,
+                                            Optional<Booking> nextBooking,
+                                            Collection<CommentsDto> comments) {
+        ItemFullDto toItemFullDto = new ItemFullDto();
+        if (item != null) {
+            toItemFullDto.setId(item.getId());
+            toItemFullDto.setName(item.getName());
+            toItemFullDto.setDescription(item.getDescription());
+            toItemFullDto.setAvailable(item.getAvailable());
+            if (lastBooking.isPresent()) {
+                toItemFullDto.setLastBooking(lastBooking.get());
+            }
+            if (nextBooking.isPresent()) {
+                toItemFullDto.setNextBooking(nextBooking.get());
+            }
+            if (comments != null && comments.size() > 0) {
+                toItemFullDto.setComments(comments);
+            } else {
+                toItemFullDto.setComments(new ArrayList<>());
+            }
+        }
+        return toItemFullDto;
     }
 }
