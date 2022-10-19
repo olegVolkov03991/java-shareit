@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Service
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {

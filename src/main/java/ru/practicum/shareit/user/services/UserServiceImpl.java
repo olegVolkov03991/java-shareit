@@ -13,7 +13,6 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {

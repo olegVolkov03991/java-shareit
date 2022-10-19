@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item.dto;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Comments;
 
 import java.time.LocalDateTime;
 
+@Component
 public class CommentsMapper {
     public static CommentsDto toCommentDto(Comments comments, String authorName) {
         return new CommentsDto(

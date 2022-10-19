@@ -25,7 +25,8 @@ public class Booking {
     private Integer itemId;
     private Integer bookerId;
     @Enumerated(EnumType.STRING)
-    Status status;
+    @Column(nullable = false)
+    private Status status;
 
     @Override
     public boolean equals(Object o) {

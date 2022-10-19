@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+@Component
 public class ItemMapper {
     public static Item toItem(ItemDto itemDto, Integer userId) {
         if (itemDto == null) {
