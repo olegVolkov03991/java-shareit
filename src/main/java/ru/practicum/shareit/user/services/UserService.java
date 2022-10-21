@@ -13,5 +13,5 @@ public interface UserService {
 
     UserDto updateUser(UserDto user, Integer id) throws Exception;
 
-    void delete(Integer id);
+    boolean delete(Integer id);
 }

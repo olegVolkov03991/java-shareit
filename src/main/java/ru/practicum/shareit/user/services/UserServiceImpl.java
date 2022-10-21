@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.services;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.ObjectNotFoundException;
@@ -56,8 +55,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         repository.deleteById(id);
+        return true;
     }
 
     private boolean validationEmailForUser(String email) {
