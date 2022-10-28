@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.status.Status;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.storage.BookingRepository;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comments;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.storage.CommentRepository;
-import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.user.storage.UserRepository;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.services.UserServiceImpl;
 
@@ -86,7 +86,7 @@ public class ItemServicesImpl implements ItemService {
 
     @Override
     public Collection<ItemFullDto> findUserItems(Integer userId) {
-        return itemRepository.findByOwner(userId)
+        return itemRepository.findByOwnerOrderByIdAsc(userId)
                 .stream()
                 .map(item -> ItemMapper.toItemFullDto(item,
                         bookingRepository.findLastBooking(item.getId(), userId, LocalDateTime.now()),

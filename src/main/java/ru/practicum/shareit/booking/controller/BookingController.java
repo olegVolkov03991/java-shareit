@@ -7,6 +7,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFullDto;
 import ru.practicum.shareit.booking.services.BookingServiceImpl;
 
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -34,13 +35,20 @@ public class BookingController {
 
     @GetMapping
     public Collection<BookingFullDto> findUserBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                                       @RequestParam(defaultValue = "ALL") String state) {
-        return bookingServiceImpl.findUserBookings(userId, state);
+                                                       @RequestParam(defaultValue = "ALL") String state,
+                                                       @RequestParam(required = false, defaultValue = "0")
+                                                       @PositiveOrZero Integer from,
+                                                       @RequestParam(required = false, defaultValue = "20")
+                                                       @PositiveOrZero Integer size) {
+        return bookingServiceImpl.findUserBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public Collection<BookingFullDto> findOwnerBookings(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                                        @RequestParam(defaultValue = "ALL") String state) {
-        return bookingServiceImpl.findOwnerBookings(userId, state);
+                                                        @RequestParam(defaultValue = "ALL") String state, @RequestParam(required = false, defaultValue = "0")
+                                                        @PositiveOrZero Integer from,
+                                                        @RequestParam(required = false, defaultValue = "20")
+                                                        @PositiveOrZero Integer size) {
+        return bookingServiceImpl.findOwnerBookings(userId, state, from, size);
     }
 }

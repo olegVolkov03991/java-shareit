@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Component
 public class ItemMapper {
+
     public static Item toItem(ItemDto itemDto, Integer userId) {
         if (itemDto == null) {
             return null;
@@ -20,7 +21,7 @@ public class ItemMapper {
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(userId);
-        item.setRequest(itemDto.getRequest());
+        item.setRequestId(itemDto.getRequestId());
         return item;
     }
 
@@ -35,7 +36,7 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .name(item.getName())
                 .owner(item.getOwner())
-                .request(item.getRequest())
+                .requestId(item.getRequestId())
                 .build();
     }
 

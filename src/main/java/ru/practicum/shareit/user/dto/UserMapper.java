@@ -31,12 +31,6 @@ public class UserMapper {
         return newUser;
     }
 
-    public static User toUpdateUser(User user, User updateUser) {
-        user.setName(updateUser.getName() == null ? user.getName() : updateUser.getName());
-        user.setEmail(updateUser.getEmail() == null ? user.getEmail() : updateUser.getEmail());
-        return user;
-    }
-
     public static List<UserDto> toUsersDto(List<User> users) {
         return users.stream().map(UserMapper::toUserDto).collect(Collectors.toList());
     }

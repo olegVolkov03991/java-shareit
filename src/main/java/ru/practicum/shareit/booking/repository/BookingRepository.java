@@ -1,5 +1,6 @@
-package ru.practicum.shareit.booking.storage;
+package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,15 +12,15 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-    Collection<Booking> findAllByBookerId(Integer bookerId, Sort states);
+    Collection<Booking> findAllByBookerId(Integer bookerId, PageRequest pageRequest, Sort states);
 
-    Collection<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Integer bookerId, LocalDateTime start, LocalDateTime end, Sort states);
+    Collection<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Integer bookerId, PageRequest pageRequest, LocalDateTime start, LocalDateTime end, Sort states);
 
-    Collection<Booking> findAllByBookerIdAndEndBefore(Integer bookerId, LocalDateTime end, Sort states);
+    Collection<Booking> findAllByBookerIdAndEndBefore(Integer bookerId, PageRequest pageRequest, LocalDateTime end, Sort states);
 
-    Collection<Booking> findAllByBookerIdAndStartAfter(Integer bookerId, LocalDateTime start, Sort states);
+    Collection<Booking> findAllByBookerIdAndStartAfter(Integer bookerId, PageRequest pageRequest, LocalDateTime start, Sort states);
 
-    Collection<Booking> findAllByBookerIdAndStatus(Integer bookerId, Status status, Sort states);
+    Collection<Booking> findAllByBookerIdAndStatus(Integer bookerId, PageRequest pageRequest, Status status, Sort states);
 
     Collection<Booking> findByItemIdAndStatusAndStartBeforeAndEndAfter(
             Integer itemId, Status status, LocalDateTime start, LocalDateTime end);
@@ -35,7 +36,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             "        (?2 = 'REJECTED' and b.status = ?2) " +
             "       )" +
             " order by b.start desc")
-    Collection<Booking> findAllByOwnerId(Integer ownerId, String state, LocalDateTime localDateTime);
+    Collection<Booking> findAllByOwnerId(Integer ownerId, PageRequest pageRequest, String state, LocalDateTime localDateTime);
 
     @Query(value = "select b.* from bookings b " +
             " where b.item_id = :itemId " +

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.controllers;
+package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto updateUser(@RequestBody UserDto user, @PathVariable Integer id) throws Exception {
+    public UserDto updateUser(@RequestBody UserDto user, @PathVariable Integer id) {
         return userServiceImpl.updateUser(user, id);
     }
 

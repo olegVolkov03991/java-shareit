@@ -23,5 +23,5 @@ public class Item {
     @Column(nullable = false)
     private Boolean available;
     private Integer owner;
-    private Integer request;
+    private Integer requestId;
 }
