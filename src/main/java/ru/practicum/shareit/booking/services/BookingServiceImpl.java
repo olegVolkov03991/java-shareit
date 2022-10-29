@@ -35,7 +35,8 @@ public class BookingServiceImpl implements BookingService {
         validateBooking(bookingDto);
         User booker = validateUser(bookerId);
         Item item = validateItem(bookingDto, bookerId);
-        Booking booking = bookingRepository.save(BookingMapper.toBooking(bookingDto, bookerId, Status.WAITING));
+        Booking booking = BookingMapper.toBooking(bookingDto, bookerId, Status.WAITING);
+        bookingRepository.save(booking);
         return BookingMapper.toBookingFullDto(booking, booker, item);
     }
 
