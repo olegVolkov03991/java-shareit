@@ -37,7 +37,7 @@ public class RequestServiceImpl implements RequestService {
         validationRequestor(userId);
 
         Request request = new Request();
-        request.setCreated(LocalDateTime.now().withSecond(0));
+        request.setCreated(LocalDateTime.now().withSecond(0).withNano(0));
         request.setDescription(itemDto.getDescription());
         request.setRequestor(userId);
 
