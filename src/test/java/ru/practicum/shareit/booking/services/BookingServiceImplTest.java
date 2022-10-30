@@ -13,8 +13,12 @@ import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.status.Status;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -39,9 +43,20 @@ class BookingServiceImplTest {
     private BookingRepository bookingRepository;
 
     private final Booking booking = new Booking();
-    private final User user = new User();
-    private final Item item = new Item();
-    private final User user2 = new User();
+
+    UserDto userDto = UserDto.builder()
+            .id(1)
+            .name("qwe")
+            .email("qwe@mail.ru")
+            .build();
+
+    ItemDto itemDto = ItemDto.builder()
+            .id(1)
+            .owner(1)
+            .available(true)
+            .description("qwe")
+            .name("qwe")
+            .build();
 
     @Test
     void createBooking() {
@@ -52,23 +67,12 @@ class BookingServiceImplTest {
         booking.setStatus(Status.WAITING);
         booking.setBookerId(1);
 
-        user.setId(1);
-        user.setEmail("qwe@mail.ru");
-        user.setName("qwe");
+        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(UserMapper.toUser(userDto)));
 
-        user2.setName("qwe2");
-        user2.setEmail("qwe2@mail.ru");
-        user2.setId(2);
+        Mockito.when(itemRepository.findById(anyInt())).thenReturn(Optional.of(ItemMapper.toItem(itemDto, 2)));
 
-        item.setId(1);
-        item.setOwner(2);
-        item.setAvailable(true);
-        item.setDescription("qwe");
-        item.setName("qwe");
-
-        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
-
-        Mockito.when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
+        User user = UserMapper.toUser(userDto);
+        Item item = ItemMapper.toItem(itemDto, 2);
 
         BookingFullDto bookingFullDto = BookingMapper.toBookingFullDto(booking, user, item);
 
@@ -80,10 +84,6 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void updateBooking() {
-    }
-
-    @Test
     void getById() {
         booking.setItemId(1);
         booking.setId(1);
@@ -92,21 +92,15 @@ class BookingServiceImplTest {
         booking.setStatus(Status.WAITING);
         booking.setBookerId(1);
 
-        user.setId(1);
-        user.setEmail("qwe@mail.ru");
-        user.setName("qwe");
-
-        user2.setName("qwe2");
-        user2.setEmail("qwe2@mail.ru");
-        user2.setId(2);
-
-        item.setId(1);
-        item.setOwner(2);
-        item.setAvailable(true);
-        item.setDescription("qwe");
-        item.setName("qwe");
+        User user = UserMapper.toUser(userDto);
+        Item item = ItemMapper.toItem(itemDto, 2);
 
         BookingFullDto bookingFullDto = BookingMapper.toBookingFullDto(booking, user, item);
+
+        Mockito.when(bookingRepository.getById(anyInt())).thenReturn(booking);
+        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
+        Mockito.when(itemRepository.findById(anyInt())).thenReturn(Optional.of(ItemMapper.toItem(itemDto, 2)));
+
 
         Assertions.assertEquals(bookingFullDto, bookingService.getById(1, 1));
     }

@@ -27,14 +27,8 @@ public class UserControllerTest {
     private final UserService userService;
 
     private UserDto userDto = UserDto.builder()
-            .id(1)
             .name("qwe")
             .email("qwe@mail.ru")
-            .build();
-    private UserDto userDto2 = UserDto.builder()
-            .id(2)
-            .name("qwe2")
-            .email("qw2e@mail.ru")
             .build();
 
     @Test
@@ -51,33 +45,5 @@ public class UserControllerTest {
         assertThat(user.getEmail(), equalTo(userDto.getEmail()));
     }
 
-    @Test
-    void getAllUsers() {
-        UserDto userDtoOne = userService.createUser(userDto);
-        UserDto userDtoTwo = userService.createUser(userDto2);
 
-
-        userService.createUser(userDtoOne);
-        userService.createUser(userDtoTwo);
-
-
-        assertThat(userService.getAllUsers(), hasSize(2));
-        assertThat(userService.getAllUsers().get(0).getName(), equalTo(userDto.getName()));
-        assertThat(userService.getAllUsers().get(0).getEmail(), equalTo(userDto.getEmail()));
-
-        assertThat(userService.getAllUsers(), hasSize(2));
-        assertThat(userService.getAllUsers().get(1).getName(), equalTo(userDto2.getName()));
-        assertThat(userService.getAllUsers().get(1).getEmail(), equalTo(userDto2.getEmail()));
-    }
-
-    @Test
-    void getUser() {
-        userService.createUser(userDto);
-        UserDto userDto2 = userService.getUser(userDto.getId());
-
-        assertThat(userDto2.getId(), notNullValue());
-        assertThat(userDto2.getName(), equalTo(userDto.getName()));
-        assertThat(userDto2.getEmail(), equalTo(userDto.getEmail()));
-
-    }
 }

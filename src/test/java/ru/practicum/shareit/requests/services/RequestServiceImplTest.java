@@ -50,7 +50,7 @@ class RequestServiceImplTest {
     @Test
     void create() {
         request.setId(null);
-        request.setCreated(LocalDateTime.now().withNano(0));
+        request.setCreated(LocalDateTime.now().withSecond(0));
         request.setRequestor(1);
         request.setDescription("qwe");
 
@@ -75,7 +75,7 @@ class RequestServiceImplTest {
     void getById() {
 
         request.setId(null);
-        request.setCreated(LocalDateTime.now().withNano(0));
+        request.setCreated(LocalDateTime.now().withSecond(0));
         request.setRequestor(1);
         request.setDescription("qwe");
 
@@ -87,9 +87,15 @@ class RequestServiceImplTest {
 
         Collection<Item> items = new ArrayList<>();
 
-        items.add(item);
+       // items.add(item);
 
         RequestFullDto requestFullDto = RequestMapper.toRequestFullDto(RequestMapper.toRequestDto(request), items);
+
+        Mockito.when(requestRepository.findById(anyInt())).thenReturn(Optional.of(request));
+
+        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
+
+        Mockito.when(requestRepository.getById(anyInt())).thenReturn(request);
 
         Assertions.assertEquals(requestFullDto, requestService.getById(1, 1));
     }
@@ -97,7 +103,7 @@ class RequestServiceImplTest {
     @Test
     void getRequestsAll() {
         request2.setId(null);
-        request2.setCreated(LocalDateTime.now().withNano(0));
+        request2.setCreated(LocalDateTime.now().withSecond(0));
         request2.setRequestor(1);
         request2.setDescription("qwe");
 

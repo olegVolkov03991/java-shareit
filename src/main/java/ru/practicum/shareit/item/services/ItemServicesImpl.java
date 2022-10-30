@@ -146,7 +146,7 @@ public class ItemServicesImpl implements ItemService {
     }
 
     public void validationOwnerItem(Integer id) {
-        if (userServiceImpl.getUser(id) == null) {
+        if (userRepository.findById(id).isEmpty()) {
             throw new NotFoundException("user not found");
         }
     }

@@ -2,28 +2,30 @@ package ru.practicum.shareit.requests.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.requests.dto.RequestDto;
-import ru.practicum.shareit.requests.dto.RequestFullDto;
-import ru.practicum.shareit.requests.dto.RequestMapper;
 import ru.practicum.shareit.requests.model.Request;
 import ru.practicum.shareit.requests.services.RequestService;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.services.UserService;
+import ru.practicum.shareit.user.services.UserServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 @Transactional
 @SpringBootTest(
@@ -35,27 +37,28 @@ class RequestContollerTest {
 
     private final RequestService requestService;
     private final EntityManager entityManager;
-    private final UserService userService;
+    private final UserServiceImpl userService;
+    @Mock
+    private final UserRepository userRepository;
 
-    Item item = new Item();
-    User user = new User();
-    Item item2 = new Item();
-    User user2 = new User();
+    UserDto userDto = UserDto.builder()
+            .name("qwe")
+            .email("qwe@mail.ru")
+            .build();
+
+    ItemDto itemDto = ItemDto.builder()
+            .owner(1)
+            .available(true)
+            .description("qwe")
+            .name("qwe")
+            .build();
 
     @Test
     void create() {
-        user.setName("qwe");
-        user.setEmail("qwe@mail.ru");
-        user.setId(1);
 
-        item.setAvailable(true);
-        item.setDescription("qweqwe");
-        item.setName("qwe");
-        item.setId(1);
-        item.setOwner(1);
-
-        userService.createUser(UserMapper.toUserDto(user));
-        RequestDto requestDto = requestService.create(ItemMapper.toItemDto(item), 1);
+        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(UserMapper.toUser(userDto)));
+        UserDto userDto1 = userService.createUser(userDto);
+        RequestDto requestDto = requestService.create(itemDto, userDto1.getId());
         TypedQuery<Request> query = entityManager.createQuery("select req from Request req where req.id = : id", Request.class);
         Request request = query.setParameter("id", requestDto.getId()).getSingleResult();
 
@@ -65,57 +68,4 @@ class RequestContollerTest {
 
     }
 
-    @Test
-    void getById() {
-        user.setName("qwe");
-        user.setEmail("qwe@mail.ru");
-        user.setId(1);
-
-        item.setAvailable(true);
-        item.setDescription("qweqwe");
-        item.setName("qwe");
-        item.setId(1);
-        item.setOwner(1);
-
-        Collection<Item> items = new ArrayList<>();
-        items.add(item);
-
-
-        userService.createUser(UserMapper.toUserDto(user));
-        RequestDto requestDto = requestService.create(ItemMapper.toItemDto(item), 1);
-
-        TypedQuery<Request> query = entityManager.createQuery("select req from Request req where req.id = : id", Request.class);
-        Request request = query.setParameter("id", requestDto.getId()).getSingleResult();
-        RequestFullDto requestFullDto = RequestMapper.toRequestFullDto(RequestMapper.toRequestDto(request), items);
-
-        RequestFullDto requestFullDto1 = requestService.getById(1, 1);
-        requestFullDto1.setItems(items);
-
-        assertThat(requestFullDto, equalTo(requestFullDto1));
-    }
-
-    @Test
-    void getRequestsAll() {
-        user.setName("qwe");
-        user.setEmail("qwe@mail.ru");
-        user.setId(1);
-
-        item.setAvailable(true);
-        item.setDescription("qweqwe");
-        item.setName("qwe");
-        item.setId(1);
-        item.setOwner(1);
-
-        item2.setAvailable(true);
-        item2.setDescription("qwe22qwe");
-        item2.setName("qwe");
-        item2.setId(1);
-        item2.setOwner(1);
-
-        userService.createUser(UserMapper.toUserDto(user));
-        requestService.create(ItemMapper.toItemDto(item), 1);
-        requestService.create(ItemMapper.toItemDto(item2), 1);
-
-        assertThat(requestService.getRequestsAll(1), hasSize(2));
-    }
 }

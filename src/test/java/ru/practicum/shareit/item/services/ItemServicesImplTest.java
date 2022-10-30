@@ -7,9 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -22,8 +25,20 @@ import static org.mockito.ArgumentMatchers.anyInt;
 @ExtendWith(MockitoExtension.class)
 class ItemServicesImplTest {
 
-    private final Item item = new Item();
-    private final User user = new User();
+
+    UserDto userDto = UserDto.builder()
+            .id(1)
+            .email("qwe@mail.ru")
+            .name("qwe")
+            .build();
+
+    ItemDto itemDto = ItemDto.builder()
+            .id(1)
+            .name("Qwe")
+            .description("qwe")
+            .available(true)
+            .owner(1)
+            .build();
 
     @InjectMocks
     private ItemServicesImpl itemServices;
@@ -34,36 +49,16 @@ class ItemServicesImplTest {
 
     @Test
     void createItem() {
-        item.setId(1);
-        item.setName("qwe");
-        item.setDescription("qweqwe");
-        item.setAvailable(true);
-        item.setOwner(1);
-        item.setRequestId(1);
 
-        user.setId(1);
-        user.setName("qwe");
-        user.setEmail("qwe@mail.ru");
+        User user = UserMapper.toUser(userDto);
+        Item item = ItemMapper.toItem(itemDto, 1);
+
 
         Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
         Mockito.when(itemRepository.save(any())).thenReturn(item);
 
-        Assertions.assertEquals(itemServices.createItem(ItemMapper.toItemDto(item), 1), ItemMapper.toItemDto(item));
-    }
 
-    @Test
-    void searchItems() {
-    }
 
-    @Test
-    void getItem() {
-    }
-
-    @Test
-    void findUserItems() {
-    }
-
-    @Test
-    void addItemComment() {
+        Assertions.assertEquals(itemServices.createItem(itemDto, 1), itemDto);
     }
 }
