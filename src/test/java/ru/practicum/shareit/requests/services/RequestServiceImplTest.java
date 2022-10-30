@@ -50,7 +50,7 @@ class RequestServiceImplTest {
     @Test
     void create() {
         request.setId(null);
-        request.setCreated(LocalDateTime.now().withSecond(0).withNano(0));
+        request.setCreated(LocalDateTime.now().withNano(0));
         request.setRequestor(1);
         request.setDescription("qwe");
 
