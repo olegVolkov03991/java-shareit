@@ -42,12 +42,12 @@ class BookingIntegrationTest {
     private final EntityManager entityManager;
 
     Booking booking = BookingMapper.toBooking(new BookingDto(LocalDateTime.of(
-                    2023, 1, 1, 1, 1, 1)
-                    , LocalDateTime.of(
-                    2024, 1, 1, 1, 1, 1)
-                    , 1)
-            , 1
-            , Status.WAITING);
+                    2023, 1, 1, 1, 1, 1),
+                    LocalDateTime.of(
+                            2024, 1, 1, 1, 1, 1),
+                    1),
+            1,
+            Status.WAITING);
 
     private User user = UserMapper.toUser(UserDto.builder()
             .email("qwe@mail.ru")
