@@ -64,10 +64,10 @@ class BookingControllerTest {
     private static final String HEADER_USER_ID = "X-Sharer-User-Id";
 
     BookingDto bookingDto = new BookingDto(LocalDateTime.of(
-            2023, 1, 1, 1, 1, 1)
-            , LocalDateTime.of(
-            2024, 1, 1, 1, 1, 1)
-            , 1);
+            2023, 1, 1, 1, 1, 1),
+            LocalDateTime.of(
+            2024, 1, 1, 1, 1, 1),
+            1);
 
     User user = UserMapper.toUser(UserDto.builder()
             .id(1)
