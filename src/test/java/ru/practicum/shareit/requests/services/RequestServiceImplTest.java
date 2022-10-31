@@ -7,8 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -16,24 +15,21 @@ import ru.practicum.shareit.requests.dto.RequestFullDto;
 import ru.practicum.shareit.requests.dto.RequestMapper;
 import ru.practicum.shareit.requests.model.Request;
 import ru.practicum.shareit.requests.repository.RequestRepository;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 
 
 @ExtendWith(MockitoExtension.class)
 class RequestServiceImplTest {
-
-    private final Request request = new Request();
-    private final Request request2 = new Request();
-    private final User user = new User();
-    private final Item item = new Item();
-
 
     @InjectMocks
     private RequestServiceImpl requestService;
@@ -47,6 +43,22 @@ class RequestServiceImplTest {
     @Mock
     private ItemRepository itemRepository;
 
+    private final Request request = new Request();
+    private final Request request2 = new Request();
+    private User user = UserMapper.toUser(UserDto.builder()
+            .email("qwe@mail.ru")
+            .name("qwe")
+            .id(1)
+            .build());
+
+    private Item item = ItemMapper.toItem(ItemDto.builder()
+            .name("qwe")
+            .id(1)
+            .description("qwe")
+            .available(true)
+            .owner(1)
+            .build(), 1);
+
     @Test
     void create() {
         request.setId(null);
@@ -54,21 +66,9 @@ class RequestServiceImplTest {
         request.setRequestor(1);
         request.setDescription("qwe");
 
-        user.setId(1);
-        user.setEmail("qwe@mail.ru");
-        user.setName("qwe");
-
-        item.setOwner(1);
-        item.setAvailable(true);
-        item.setName("qwe");
-        item.setId(1);
-        item.setDescription("qwe");
-
         Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
 
         Assertions.assertEquals(RequestMapper.toRequestDto(request), requestService.create(ItemMapper.toItemDto(item), 1));
-
-
     }
 
     @Test
@@ -79,15 +79,7 @@ class RequestServiceImplTest {
         request.setRequestor(1);
         request.setDescription("qwe");
 
-        item.setOwner(1);
-        item.setAvailable(true);
-        item.setName("qwe");
-        item.setId(1);
-        item.setDescription("qwe");
-
         Collection<Item> items = new ArrayList<>();
-
-       // items.add(item);
 
         RequestFullDto requestFullDto = RequestMapper.toRequestFullDto(RequestMapper.toRequestDto(request), items);
 
@@ -106,16 +98,6 @@ class RequestServiceImplTest {
         request2.setCreated(LocalDateTime.now().withSecond(0));
         request2.setRequestor(1);
         request2.setDescription("qwe");
-
-        user.setId(1);
-        user.setEmail("qwe@mail.ru");
-        user.setName("qwe");
-
-        item.setOwner(1);
-        item.setAvailable(true);
-        item.setName("qwe");
-        item.setId(1);
-        item.setDescription("qwe");
 
         Collection<Item> items = new ArrayList<>();
 

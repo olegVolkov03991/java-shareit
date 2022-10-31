@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 
-
 @ExtendWith(MockitoExtension.class)
 class BookingServiceImplTest {
     @InjectMocks
@@ -42,37 +41,38 @@ class BookingServiceImplTest {
     @Mock
     private BookingRepository bookingRepository;
 
-    private final Booking booking = new Booking();
+    private Booking booking = BookingMapper.toBooking(new BookingDto(LocalDateTime.of(
+                    2023, 1, 1, 1, 1, 1)
+                    , LocalDateTime.of(
+                    2024, 1, 1, 1, 1, 1)
+                    , 1)
+            , 1
+            , Status.WAITING);
 
-    UserDto userDto = UserDto.builder()
-            .id(1)
-            .name("qwe")
+    private User user = UserMapper.toUser(UserDto.builder()
             .email("qwe@mail.ru")
-            .build();
-
-    ItemDto itemDto = ItemDto.builder()
-            .id(1)
-            .owner(1)
-            .available(true)
-            .description("qwe")
             .name("qwe")
-            .build();
+            .id(1)
+            .build());
+
+    private Item item = ItemMapper.toItem(ItemDto.builder()
+            .name("qwe")
+            .id(1)
+            .description("qwe")
+            .available(true)
+            .owner(1)
+            .build(), 1);
+
+    private ItemDto itemDto = ItemMapper.toItemDto(item);
 
     @Test
     void createBooking() {
-        booking.setItemId(1);
-        booking.setId(1);
-        booking.setStart(LocalDateTime.of(2023, 1, 1, 1, 1));
-        booking.setEnd(LocalDateTime.of(2024, 1, 1, 1, 1));
-        booking.setStatus(Status.WAITING);
-        booking.setBookerId(1);
 
-        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(UserMapper.toUser(userDto)));
+        Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
 
         Mockito.when(itemRepository.findById(anyInt())).thenReturn(Optional.of(ItemMapper.toItem(itemDto, 2)));
 
-        User user = UserMapper.toUser(userDto);
-        Item item = ItemMapper.toItem(itemDto, 2);
+        item.setOwner(2);
 
         BookingFullDto bookingFullDto = BookingMapper.toBookingFullDto(booking, user, item);
 
@@ -85,22 +85,14 @@ class BookingServiceImplTest {
 
     @Test
     void getById() {
-        booking.setItemId(1);
-        booking.setId(1);
-        booking.setStart(LocalDateTime.of(2023, 1, 1, 1, 1));
-        booking.setEnd(LocalDateTime.of(2024, 1, 1, 1, 1));
-        booking.setStatus(Status.WAITING);
-        booking.setBookerId(1);
 
-        User user = UserMapper.toUser(userDto);
-        Item item = ItemMapper.toItem(itemDto, 2);
+        item.setOwner(2);
 
         BookingFullDto bookingFullDto = BookingMapper.toBookingFullDto(booking, user, item);
 
         Mockito.when(bookingRepository.getById(anyInt())).thenReturn(booking);
         Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
         Mockito.when(itemRepository.findById(anyInt())).thenReturn(Optional.of(ItemMapper.toItem(itemDto, 2)));
-
 
         Assertions.assertEquals(bookingFullDto, bookingService.getById(1, 1));
     }

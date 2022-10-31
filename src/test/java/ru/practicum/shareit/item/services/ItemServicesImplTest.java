@@ -21,10 +21,8 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
-
 @ExtendWith(MockitoExtension.class)
 class ItemServicesImplTest {
-
 
     UserDto userDto = UserDto.builder()
             .id(1)
@@ -53,11 +51,8 @@ class ItemServicesImplTest {
         User user = UserMapper.toUser(userDto);
         Item item = ItemMapper.toItem(itemDto, 1);
 
-
         Mockito.when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
         Mockito.when(itemRepository.save(any())).thenReturn(item);
-
-
 
         Assertions.assertEquals(itemServices.createItem(itemDto, 1), itemDto);
     }
