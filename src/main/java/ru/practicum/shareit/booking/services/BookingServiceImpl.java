@@ -66,7 +66,7 @@ public class BookingServiceImpl implements BookingService {
             BookingFullDto bookingFullDto = BookingMapper.toBookingFullDto(booking, booker, item);
             return bookingFullDto;
         } catch (Exception e) {
-            throw new NotFoundException("тут вообще беда");
+            throw new NotFoundException("please check data");
         }
     }
 
