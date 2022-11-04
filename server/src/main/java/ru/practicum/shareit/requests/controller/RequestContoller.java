@@ -8,7 +8,6 @@ import ru.practicum.shareit.requests.dto.RequestDto;
 import ru.practicum.shareit.requests.dto.RequestFullDto;
 import ru.practicum.shareit.requests.services.RequestServiceImpl;
 
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 import java.util.List;
 

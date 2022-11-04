@@ -21,13 +21,15 @@ public class ItemController {
     private final ItemServicesImpl itemServicesImpl;
 
     @PostMapping
-    public ItemDto createItem(@RequestBody ItemDto item, @RequestHeader("X-Sharer-User-Id") int id) throws ObjectNotFoundException {
+    public ItemDto createItem(@RequestBody ItemDto item,
+                              @RequestHeader("X-Sharer-User-Id") int id) throws ObjectNotFoundException {
 
         return itemServicesImpl.createItem(item, id);
     }
 
     @PatchMapping("/{id}")
-    public ItemDto updateItem(@RequestBody ItemDto item, @PathVariable int id, @RequestHeader("X-Sharer-User-Id") int userId) {
+    public ItemDto updateItem(@RequestBody ItemDto item, @PathVariable int id,
+                              @RequestHeader("X-Sharer-User-Id") int userId) {
         return itemServicesImpl.updateItem(item, id, userId);
     }
 
@@ -39,8 +41,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemFullDto> getAllItems(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam int from, @RequestParam int size) {
-        return itemServicesImpl.findUserItems(userId, from , size);
+    public Collection<ItemFullDto> getAllItems(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam int from,
+                                               @RequestParam int size) {
+        return itemServicesImpl.findUserItems(userId, from, size);
     }
 
     @GetMapping("/search")
@@ -52,7 +55,8 @@ public class ItemController {
     public ResponseEntity<CommentsDto> addItemComment(@PathVariable int id,
                                                       @Valid @RequestBody CommentsDto commentDto,
                                                       @RequestHeader("X-Sharer-User-Id") int userId) {
-        return itemServicesImpl.addItemComment(id, userId, commentDto).map(comment -> new ResponseEntity<>(comment, HttpStatus.OK))
+        return itemServicesImpl.addItemComment(id, userId, commentDto).map(comment -> new ResponseEntity<>(comment,
+                        HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
