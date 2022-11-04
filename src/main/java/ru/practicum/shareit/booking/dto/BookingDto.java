@@ -11,4 +11,7 @@ public class BookingDto {
     private LocalDateTime start;
     private LocalDateTime end;
     private Integer itemId;
+
+
+
 }
