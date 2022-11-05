@@ -33,6 +33,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
+        log.info("get all users");
         return userClient.getAllUsers();
     }
 

@@ -16,6 +16,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.services.UserServiceImpl;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +34,7 @@ public class ItemServicesImpl implements ItemService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public ItemDto createItem(ItemDto itemDto, Integer userId) {
         validationItemName(itemDto.getName());
         validationDescriptionItem(itemDto.getDescription());
@@ -45,6 +47,7 @@ public class ItemServicesImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto updateItem(ItemDto itemDto, Integer id, Integer userId) {
         if (!itemRepository.findById(id).orElseThrow().getOwner().equals(userId)) {
             throw new NotFoundException("item not found owner(userId)");
@@ -99,6 +102,7 @@ public class ItemServicesImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public Optional<CommentsDto> addItemComment(Integer itemId, Integer userId, CommentsDto commentDto) {
         User user = validateUser(userId);
         if (validateBookingItem(itemId, userId)) {

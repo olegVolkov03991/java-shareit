@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -10,12 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.client.BookingClient;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.exceptions.ValidationException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -31,7 +29,7 @@ public class BookingController {
                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
+                .orElseThrow(() -> new ValidationException(String.format("Unknown state: %s", stateParam)));
         log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
         return bookingClient.getBookings(userId, state, from, size);
     }
@@ -42,7 +40,7 @@ public class BookingController {
                                                          @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                          @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
+                .orElseThrow(() -> new ValidationException(String.format("Unknown state: %s", stateParam)));
         log.info("Get booking owner with state {}, user{}, from{}, size{}", stateParam, userId, from, size);
         return bookingClient.getBookingCurrentOwner(userId, state, from, size);
     }
@@ -68,13 +66,5 @@ public class BookingController {
                                                 @RequestParam boolean approved) {
         log.info("update status{}, bookingId{}, userId{}", approved, bookingId, userId);
         return bookingClient.update(userId, bookingId, approved);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Map<String, String>> errorHandler(IllegalArgumentException ex) {
-        Map<String, String> resp = new HashMap<>();
-        resp.put("error", String.format("Unknown state: UNSUPPORTED_STATUS"));
-        return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
 }

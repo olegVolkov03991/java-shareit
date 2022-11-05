@@ -47,14 +47,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public UserDto getUser(Integer id) {
         User user = repository.findById(id).orElseThrow(ObjectNotFoundException::new);
         return UserMapper.toUserDto(user);
     }
 
     @Override
-    @Transactional
     public List<UserDto> getAllUsers() {
         List<User> users = repository.findAll();
         return UserMapper.toUsersDto(users);

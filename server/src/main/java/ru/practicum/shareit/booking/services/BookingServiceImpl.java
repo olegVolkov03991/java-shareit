@@ -18,6 +18,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public BookingFullDto createBooking(BookingDto bookingDto, Integer bookerId) {
         validateBooking(bookingDto);
         User booker = validateUser(bookerId);
@@ -41,6 +43,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public Optional<BookingFullDto> updateBooking(Integer id, Integer ownerId, Boolean approved) {
         validateUser(ownerId);
         Booking booking = validateBooking(id, ownerId, null);

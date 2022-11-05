@@ -17,6 +17,7 @@ import ru.practicum.shareit.requests.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,7 @@ public class RequestServiceImpl implements RequestService {
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public RequestDto create(ItemDto itemDto, Integer userId) {
         validationDescription(itemDto.getDescription());
         validationRequestor(userId);
